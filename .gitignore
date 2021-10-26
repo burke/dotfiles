@@ -1,0 +1,11 @@
+*
+!/.zshrc
+!/.gitignore
+
+!/.config
+!/.config/nvim
+!/.config/nvim/init.vim
+
+!/.hammerspoon
+
+!/.iterm2_shell_integration.zsh
