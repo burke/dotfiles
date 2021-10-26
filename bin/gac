@@ -1,0 +1,6 @@
+#!/bin/bash
+if [[ $# -eq 0 ]] ; then
+  git commit -av
+else
+  git commit -a -m "$*"
+fi

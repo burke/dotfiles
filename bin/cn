@@ -1,0 +1,27 @@
+#!/bin/bash
+
+pl1=(cat)
+pl3=(exec cat)
+
+if [[ $1 == "-h" ]]; then
+  shift
+  pl1=(tail -n+2)
+fi
+
+col=$1
+shift
+
+pl2=(awk "{print \$$col}")
+
+if [[ $# -gt 0 ]]; then
+  xargsArgs=(-n1)
+  for arg in "$@"; do
+    if [[ "${arg}" == "@" ]]; then
+      xargsArgs+=(-I@)
+      break
+    fi
+  done
+  pl3=(exec xargs "${xargsArgs[@]}" "$@")
+fi
+
+"${pl1[@]}" | "${pl2[@]}" | "${pl3[@]}"

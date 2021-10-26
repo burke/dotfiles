@@ -1,0 +1,2 @@
+#!/bin/bash
+n=$1; shift; tail "-n+${n}" "$@"

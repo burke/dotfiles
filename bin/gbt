@@ -1,0 +1,2 @@
+#!/bin/bash
+gb --track "$1" "origin/$1"

@@ -1,0 +1,2 @@
+#!/bin/bash
+while [[ ! -d .git ]] && [[ "$(pwd)" != "/" ]]; do cd ".."; done

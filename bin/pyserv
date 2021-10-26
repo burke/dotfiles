@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "http://$(myip):8000" | pbcopy
+python -m SimpleHTTPServer

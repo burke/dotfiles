@@ -1,0 +1,7 @@
+#!/bin/bash
+set -euo pipefail
+gitdir="$(git rev-parse --git-dir)"
+
+if [[ -f "$gitdir/CHERRY_PICK_HEAD" ]]; then git cherry-pick --abort; fi
+if [[ -f "$gitdir/MERGE_HEAD" ]];       then git merge --abort;       fi
+if [[ -d "$gitdir/rebase-merge" ]];     then git rebase --abort;      fi

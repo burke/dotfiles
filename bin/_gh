@@ -1,0 +1,47 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+
+module Github
+
+  GH_ROOT = "#{ENV["HOME"]}/src/github.com"
+
+  def self.open(*args)
+    clone_repo(repo_path(*args))
+  end
+
+  # Takes:
+  #   "https://github.com/libressl/libressl"
+  #   "github.com/libressl/libressl"
+  #   "libressl/libressl"
+  #   "libressl", "libressl"
+  # Returns:
+  #   "libressl/libressl"
+  def self.repo_path(*args)
+    repo = args[0]
+    if args.size > 1
+      repo = args.join("/")
+    end
+    repo.
+      sub(/.*github.com[\/:]/, '').
+      sub(/\.git$/, '')
+  end
+
+  # Takes:
+  #   "libressl/libressl"
+  # Returns
+  #   "/Users/myuser/src/github.com/libressl/libressl"
+  #   (after cloning if not present)
+  def self.clone_repo(path)
+    acct, _ = path.split('/')
+    FileUtils.mkdir_p(GH_ROOT + "/" + acct)
+    fullpath = GH_ROOT + "/" + path
+    unless Dir.exists?(fullpath)
+      system("git clone git@github.com:#{path}.git #{fullpath}")
+    end
+    fullpath
+  end
+
+end
+
+__FILE__ == $0 and puts Github.open(*ARGV)

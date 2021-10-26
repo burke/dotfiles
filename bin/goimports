@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+require 'open3'
+require 'tmpdir'
+
+GOIMPORTS = File.expand_path('~/bin/goimports')
+
+def bail
+  exec(GOIMPORTS, *ARGV)
+end
+
+first_go_arg = ARGV.detect { |path| path.end_with?('.go') }
+bail unless first_go_arg
+
+full_path = File.expand_path(first_go_arg, Dir.pwd)
+gopath    = File.expand_path(ENV['GOPATH'])
+
+curr = full_path
+loop do
+  bail if curr == gopath
+  break if Dir.exist?(File.expand_path('.git', curr))
+  curr = File.dirname(curr)
+end
+
+puts curr
+relpath = curr[gopath.length+1..-1]
+puts relpath
+
+vendor = File.join(curr, 'vendor')
+bail unless Dir.exist?(vendor)
+
+Dir.mktmpdir do |dir|
+  FileUtils.mkdir_p(File.join(dir, '1', File.dirname(relpath)))
+  FileUtils.mkdir(File.join(dir, '2'))
+
+  FileUtils.ln_s(curr,   File.join(dir, '1', relpath))
+  FileUtils.ln_s(vendor, File.join(dir, '2', 'src'))
+
+  ENV['GOPATH'] = [File.join(dir, '1'), File.join(dir, '2')].join(":")
+  system(GOIMPORTS, *ARGV)
+end

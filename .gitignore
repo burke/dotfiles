@@ -2,6 +2,9 @@
 !/.zshrc
 !/.gitignore
 
+!/bin
+!/bin/*
+
 !/.zsh
 !/.zsh/plugins
 !/.zsh/plugins/*
