@@ -2,9 +2,18 @@
 !/.zshrc
 !/.gitignore
 
+!/.zsh
+!/.zsh/plugins
+!/.zsh/plugins/*
+
 !/.config
+
+!~/.config/LS_COLORS
+
 !/.config/nvim
 !/.config/nvim/init.vim
+!/.config/nvim/autoload
+!/.config/nvim/autoload/plug.vim
 
 !/.hammerspoon
 !/.hammerspoon/*

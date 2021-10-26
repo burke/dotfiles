@@ -2,7 +2,11 @@
 
 typeset -U path cdpath fpath manpath
 
-
+function source_if_exists() {
+  if [[ -f "$1" ]]; then
+    source "$1"
+  fi
+}
 
 for profile in ${(z)NIX_PROFILES}; do
   fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
@@ -13,10 +17,9 @@ HELPDIR="/nix/store/9bgw2q3kqylgvsi8gdv31np04rbdaacp-zsh-5.8/share/zsh/$ZSH_VERS
 # Use emacs keymap as the default.
 bindkey -e
 
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
-
-
-eval $(/nix/store/mha2vnicr34nz80mbm9xx561h9wq27nh-coreutils-8.32/bin/dircolors -b /nix/store/w1mfkpyvfszsfaj3xzalyc17y9ykfqy5-LS_COLORS)
+eval $(gdircolors -b ~/.config/LS_COLORS)
 PROMPT='$(shell-prompt "$?" "${__shadowenv_data%%:*}" "${__dev_source_dir}")'
 
 gpg-agent --daemon >/dev/null 2>&1
@@ -87,6 +90,7 @@ unsetopt PROMPT_BANG
 unsetopt MULTIOS
 
 
+path+="$HOME/bin"
 
 path+="$HOME/.zsh/plugins/zsh-autosuggestions"
 fpath+="$HOME/.zsh/plugins/zsh-autosuggestions"
@@ -99,10 +103,8 @@ fpath+="$HOME/.zsh/plugins/zsh-syntax-highlighting"
 # as all $fpath entries will be traversed again.
 autoload -U compinit && compinit
 
-source /nix/store/a5pdy1x1h0s1563pn97bjvy0pr2g8baq-zsh-autosuggestions-0.7.0/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-
 # Environment variables
-. "/Users/burke/.nix-profile/etc/profile.d/hm-session-vars.sh"
+source_if_exists "/Users/burke/.nix-profile/etc/profile.d/hm-session-vars.sh"
 export DEV_ALLOW_ITERM2_INTEGRATION="1"
 export EDITOR="vim"
 export GIT_EDITOR="vim"
@@ -113,17 +115,8 @@ export PATH="$HOME/.emacs.d/bin:$HOME/bin:$PATH"
 export VISUAL="vim"
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=3"
 
-
-
-
-
-if [ -f "$HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh" ]; then
-  source "$HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh"
-fi
-if [ -f "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh" ]; then
-  source "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh"
-fi
-
+source_if_exists "$HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh"
+source_if_exists "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh"
 
 # History options should be set in .zshrc and after oh-my-zsh sourcing.
 # See https://github.com/nix-community/home-manager/issues/177.
@@ -241,11 +234,8 @@ ggg() {
   gaac "$*" && ggn
 }
 
-source ~/.iterm2_shell_integration.zsh
-
-if [ -f ~/.nix-profile/etc/profile.d/nix.sh ]; then
-  source ~/.nix-profile/etc/profile.d/nix.sh
-fi
+source_if_exists ~/.iterm2_shell_integration.zsh
+source_if_exists ~/.nix-profile/etc/profile.d/nix.sh
 
 if [[ -n "${SCREENCAST}" ]]; then
   HISTFILE=$(mktemp)
@@ -255,16 +245,7 @@ export KUBECONFIG=/Users/burke/.kube/config.shopify.cloudplatform
 
 export "PATH=$HOME/.local/bin:$PATH"
 
-if [ -f $HOME/.ghcup/env ]; then
-  source $HOME/.ghcup/env
-fi
-
-if [ -f /opt/dev/dev.sh ]; then
-  source /opt/dev/dev.sh
-elif [ -f /run/current-system/sw/bin/dev ]; then
-  eval $(dev init)
-  eval "$(shadowenv init zsh)"
-fi
+source_if_exists /opt/dev/dev.sh
 
 [[ -f /opt/dev/sh/chruby/chruby.sh ]] && type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; }
 
@@ -389,7 +370,7 @@ alias ll='ll1'
 alias ll1='tree --dirsfirst -ChFupDaL 1'
 alias ll2='tree --dirsfirst -ChFupDaL 2'
 alias ll3='tree --dirsfirst -ChFupDaL 3'
-alias ls='ls --color=auto -F'
+alias ls='gls --color=auto -F'
 alias m='hostname-fix ; mutt'
 alias mi='gem install'
 alias mu='gem uninstall'
@@ -432,4 +413,5 @@ alias ꩜='dev spin'
 
 # Named Directory Hashes
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
+
+[[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
