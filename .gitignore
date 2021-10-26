@@ -7,5 +7,6 @@
 !/.config/nvim/init.vim
 
 !/.hammerspoon
+!/.hammerspoon/*
 
 !/.iterm2_shell_integration.zsh
