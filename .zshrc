@@ -432,3 +432,4 @@ alias ꩜='dev spin'
 
 # Named Directory Hashes
 
+eval "$(/opt/homebrew/bin/brew shellenv)"
