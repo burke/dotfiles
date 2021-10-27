@@ -3,7 +3,8 @@
 !/.gitignore
 
 !/bin
-!/bin/*
+!/bin/_git
+!/bin/_git/*
 
 !/.zsh
 !/.zsh/plugins
