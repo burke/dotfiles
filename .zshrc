@@ -89,8 +89,7 @@ unsetopt PROMPT_BANG
 
 unsetopt MULTIOS
 
-
-path+="$HOME/bin"
+PATH="$HOME/bin:$HOME/bin/_git:$PATH"
 
 path+="$HOME/.zsh/plugins/zsh-autosuggestions"
 fpath+="$HOME/.zsh/plugins/zsh-autosuggestions"
@@ -242,8 +241,6 @@ if [[ -n "${SCREENCAST}" ]]; then
 fi
 
 export KUBECONFIG=/Users/burke/.kube/config.shopify.cloudplatform
-
-export "PATH=$HOME/.local/bin:$PATH"
 
 source_if_exists /opt/dev/dev.sh
 
